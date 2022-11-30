@@ -1,13 +1,3 @@
-<script setup>
-import { ref } from 'vue'
-
-//defineProps({
-  //msg: String
-//})
-
-
-</script>
-
 <template>
 
 
@@ -24,8 +14,10 @@ import { ref } from 'vue'
                         <v-text-field label="ユーザ名" />
                         <v-text-field type="password" label="パスワード" />
                         <v-card-actions>
-                            <v-btn color="primary" elevation="2" large>ログイン</v-btn>
+                            <v-btn color="primary" elevation="2" large @click="goToMain()">ログイン</v-btn>
+                            <router-link to="/main">Go to Main</router-link>
                         </v-card-actions>
+
                     </v-form>
                 </v-card-text>
             </v-card>
@@ -34,6 +26,21 @@ import { ref } from 'vue'
 
 
 </template>
+
+<script>
+
+export default {
+
+    methods: {
+        goToMain() {
+            this.$router.push('/main')
+        },
+        
+
+        }
+    }
+
+</script>
 
 <style scoped>
 .read-the-docs {
@@ -44,7 +51,7 @@ import { ref } from 'vue'
     width: 400px;
     padding: 10px 50px;
     margin: 10px auto;
-   
+
     border-radius: 5px;
 }
 
