@@ -13,7 +13,7 @@ import { ref } from 'vue'
         ooさん 管理  
         <v-btn color="primary" elevation="2" large @click="goToManagement()">社員管理</v-btn>
         <v-btn color="primary" elevation="2" large @click="goToData()">監視データ</v-btn>
-        <router-link to="/login">ログアウト</router-link>
+        <router-link to="./login">ログアウト</router-link>
 
     </v-app-bar>
 

@@ -15,7 +15,7 @@
                         <v-text-field type="password" label="パスワード" />
                         <v-card-actions>
                             <v-btn color="primary" elevation="2" large @click="goToMain()">ログイン</v-btn>
-                            <router-link to="/main">Go to Main</router-link>
+                            <router-link to="./main">Go to Main</router-link>
                         </v-card-actions>
 
                     </v-form>

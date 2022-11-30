@@ -1,15 +1,8 @@
-<script setup>
- 
-</script>
-
-
-
 <template>
   <v-app>
     <v-app-bar app>
    TWKSシステム
     </v-app-bar>
-   
 
     <v-main>
 
@@ -23,6 +16,22 @@
 
   </v-app>
 </template>
+
+<script>
+import {useRoute} from 'vue-router'
+import {computed} from 'vue'
+
+
+export default {
+
+  
+setup() {
+   const route=useRoute();
+
+   const path = computed(() =>route.path)
+   console.log(path)
+}}
+</script>
 
 <style scoped>
 
