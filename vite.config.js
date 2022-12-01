@@ -12,7 +12,8 @@ export default defineConfig({
   base: '',
   plugins: [vue(),Pages(),viteSingleFile(),vuetify({ autoImport: true }),],
   ssr: {
-		noExternal: ['vuetify']
+		noExternal: ['vuetify'],
+    
 	},
   resolve: {
     alias: {

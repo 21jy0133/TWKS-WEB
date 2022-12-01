@@ -5,9 +5,7 @@
     </v-app-bar>
 
     <v-main>
-
-     <router-view></router-view>
-
+    <router-view />
     </v-main>
 
     <v-footer app>
@@ -20,6 +18,7 @@
 <script>
 import {useRoute} from 'vue-router'
 import {computed} from 'vue'
+import path from 'path'
 
 
 export default {
@@ -29,7 +28,10 @@ setup() {
    const route=useRoute();
 
    const path = computed(() =>route.path)
+   const name = computed(() =>route.name)
    console.log(path)
+   console.log(name)
+   console.log(route)
 }}
 </script>
 

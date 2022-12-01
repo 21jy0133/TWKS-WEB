@@ -1,13 +1,11 @@
-import { ViteSSG } from './vite-ssg'
-/*
 import { createApp } from 'vue'
-*/
+
 import App from './App.vue'
 import routes from '~pages'
 
-/*
-import { createRouter, createWebHistory } from 'vue-router'
-*/
+
+import { createRouter, createWebHashHistory } from 'vue-router'
+
 
 // Vuetify
 import 'vuetify/styles'
@@ -21,26 +19,10 @@ const vuetify = createVuetify({
 })
 
 
-/*
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes,
 })
 
 
 createApp(App).use(router).use(vuetify).mount('#app')
-*/
-
-console.log(routes)
-
-
-export const createApp = ViteSSG(
-    // the root component
-    App,
-    // vue-router options
-    { routes, base: '', },
-    // function to have custom setups
-    ({ app, router, routes, isClient, initialState }) => {
-      app.use(vuetify)
-    }
-)
