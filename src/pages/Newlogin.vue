@@ -6,6 +6,8 @@
         <v-btn color="primary" elevation="2" large>社員管理</v-btn>
         <v-btn color="primary" elevation="2" large @click="goToData()">監視データ</v-btn>
         <router-link to="/login">ログアウト</router-link>
+        aaa
+        
 
     </v-app-bar>
 
