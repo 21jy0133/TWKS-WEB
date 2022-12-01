@@ -1,14 +1,38 @@
 <template>
     <v-app-bar app>
         ooさん 管理
+
+
         <v-btn color="primary" elevation="2" large>社員管理</v-btn>
         <v-btn color="primary" elevation="2" large @click="goToData()">監視データ</v-btn>
         <router-link to="/login">ログアウト</router-link>
-    </v-app-bar>
-    <v-app-bar app>
-
 
     </v-app-bar>
+
+    <v-content>
+        <v-form v-model="input">
+            <v-container>
+                <div id="search">
+                    <v-table>
+                        <thead>
+                            <tr>
+                                <th>社員番号:</th>
+                                <td><input v-model="input" placeholder="社員番号" ></td>
+                                <th>名前:</th>
+                                <td><input v-model="input" placeholder="名前"></td>
+                                <v-btn color="primary" elevation="2" large @click="selectDepartment()">検索</v-btn>
+                                <v-btn color="primary" elevation="2" large @click="newlogin()">新入社員登録</v-btn>
+                                
+                            </tr>
+                        </thead>
+                        
+                    </v-table>
+                </div>
+
+            </v-container>
+        </v-form>
+    </v-content>
+
 
 
     <v-card elevation="12" width="256">
@@ -22,6 +46,7 @@
             </v-list>
         </v-navigation-drawer>
     </v-card>
+    
 
     <v-table>
         <thead>
@@ -45,20 +70,17 @@
             </tr>
         </tbody>
     </v-table>
-
-
-
-
-
-
-
 </template>
 
 <script>
+
 export default {
     data() {
         return {
             selectedDepartment: null,
+            index:0,
+            list:[],
+            data:[],
 
             departments: {
                 'i1': {
@@ -136,9 +158,17 @@ export default {
     methods: {
         selectDepartment(department) {
             this.selectedDepartment = department.id
+        },
+        goToData(){
+            this.$router.push('/data')
+        },
+        newlogin(){
+            this.$router.push('/newlogin')
         }
+        
     }
 }
+
 
 </script>
 <style scoped>
