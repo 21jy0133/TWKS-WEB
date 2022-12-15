@@ -11,8 +11,8 @@
                 </v-card-title>
                 <v-card-text>
                     <v-form>
-                        <v-text-field label="ユーザ名" />
-                        <v-text-field type="password" label="パスワード" />
+                        <v-text-field label="ユーザ名" :rules="namerules"/>
+                        <v-text-field type="password" label="パスワード" :rules="pwrules"/>
                         <v-card-actions>
                             <v-btn color="primary" elevation="2" large @click="goToMain()">ログイン</v-btn>
                             <router-link to="./main">Go to Main</router-link>
@@ -30,6 +30,12 @@
 <script>
 
 export default {
+    namerules: [
+      value => !!value && '必要項目',
+    ],
+    pwrules:[
+        value => !!value && '必要項目',
+    ],
 
     methods: {
         goToMain() {

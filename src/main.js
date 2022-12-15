@@ -18,6 +18,7 @@ const vuetify = createVuetify({
   directives,
 })
 
+console.log(routes)
 
 const router = createRouter({
     history: createWebHashHistory(),

@@ -34,7 +34,6 @@
     </v-content>
 
 
-
     <v-card elevation="12" width="256">
         <v-navigation-drawer floating permanent>
             <v-list dense rounded>
@@ -60,6 +59,8 @@
                 <th class="text-left">
                     部署
                 </th>
+                <th>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -67,6 +68,7 @@
                 <td>{{ item.id }}</td>
                 <td>{{ item.name }}</td>
                 <td>{{ departments[selectedDepartment].name }}</td>
+                <td><router-link :to="{ name: 'Employee-id', params: {id: item.id }}">詳細</router-link></td>
             </tr>
         </tbody>
     </v-table>
@@ -105,6 +107,7 @@ export default {
                     id: 'jy0001',
                     name: 'AAA',
                     department: 'i1',
+                    
 
                 },
                 {
