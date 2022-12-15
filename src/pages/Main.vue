@@ -46,7 +46,7 @@ export default {
         },
         goToData(){
             this.$router.push('/data')
-        }
+        },
         
 
         }
