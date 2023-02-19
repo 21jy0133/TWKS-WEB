@@ -61,7 +61,7 @@
 
     </div>
     <v-btn color="primary" elevation="2" @click="goToManagement()" large>戻る</v-btn>
-    <v-btn color="primary" elevation="2" large>情報更新</v-btn>
+    <v-btn color="primary" elevation="2" large @click="gotoNewlogin3()">情報更新</v-btn>
     <v-dialog v-model="dialog" persistent>
         <template v-slot:activator="{ props }">
             <v-btn color="pink" v-bind="props">
@@ -234,7 +234,9 @@ export default {
         },
         gotoDelete(){
             this.$router.push('/deleted')
-        }
+        },
+        gotoNewlogin3(){
+            this.$router.push('/newlogin3')}
 
     },
     computed: {

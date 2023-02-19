@@ -9,7 +9,7 @@
     </v-main>
 
     <v-footer app>
-      12345678
+      KH株式会社
   </v-footer>
 
   </v-app>
@@ -21,9 +21,11 @@ import {computed} from 'vue'
 import path from 'path'
 
 
-export default {
 
+export default {
   
+
+
 setup() {
    const route=useRoute();
 

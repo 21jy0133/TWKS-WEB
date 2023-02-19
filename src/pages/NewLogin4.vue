@@ -144,9 +144,6 @@ export default {
 
     }
 
-
-
-
 }
 
 
@@ -210,8 +207,6 @@ button {
     padding: 0 24px;
     cursor: pointer;
 }
-
-
 .add {
     width: 400px;
     padding: 10px 50px;

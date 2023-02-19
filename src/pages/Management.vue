@@ -10,31 +10,51 @@
     </v-app-bar>
 
     <v-content>
-        <v-form v-model="input">
             <v-container>
                 <div id="search">
+                    <v-form ref="form">
+                        <v-row>
+
+                            <v-col cols="12" sm="6" md="3"><v-text-field :rules="rules.id" required v-model="searchId"
+                                    label="社員番号"></v-text-field></v-col>
+                            <v-col cols="12" sm="6" md="3"> <v-text-field :rules="rules.name" required
+                                    v-model="searchName" label="名前"></v-text-field>
+
+                            </v-col>
+
+                        </v-row>
+                    </v-form>
                     <v-table>
                         <thead>
                             <tr>
+                                <!--v-text-field v-model="search" label="社員番号"></v-text-field-->
+                                <!--v-search-field v-model="search" append-icon="mdi-magnify" label="社員番号" placeholder="Search"></v-search-field-->
+                                <v-card v-for="item in filteredItems" :key="item.id">
+                                    {{ item.id }}
+                                </v-card>
+                                <!--v-text-field v-model="search" label="名前"></v-text-field>
+                                <v-card v-for="item in filteredItems" :key="item.id">
+                                    {{ item.name }}
+                                </v-card>
                                 <th>社員番号:</th>
-                                <td><input v-model="input" placeholder="社員番号" ></td>
+                                <td><input v-model="input" placeholder="社員番号"></td>
                                 <th>名前:</th>
-                                <td><input v-model="input" placeholder="名前"></td>
-                                <v-btn color="primary" elevation="2" large @click="selectDepartment()">検索</v-btn>
-                                <v-btn color="primary" elevation="2" large @click="newlogin()">新入社員登録</v-btn>
-                                
+                                <td><input v-model="input" placeholder="名前"></td-->
+                                <v-btn color="primary" elevation="2" large @click="searchEmployee()">検索</v-btn>
+                                <v-btn class="ml-2" color="primary" elevation="2" large
+                                    @click="newlogin()">新入社員登録</v-btn>
+
+
                             </tr>
                         </thead>
-                        
+
                     </v-table>
                 </div>
 
             </v-container>
-        </v-form>
     </v-content>
 
 
-    <v-card elevation="12" width="256">
         <v-navigation-drawer floating permanent>
             <v-list dense rounded>
                 <v-list-item v-for="item in departments" @click="selectDepartment(item)" :key="item.id" link>
@@ -44,8 +64,8 @@
                 </v-list-item>
             </v-list>
         </v-navigation-drawer>
-    </v-card>
-    
+
+
 
     <v-table>
         <thead>
@@ -64,14 +84,17 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="item in employees.filter(e => e.department == selectedDepartment)" :key="item.id">
+            <tr v-for="item in selectedEmployees" :key="item.id">
                 <td>{{ item.id }}</td>
                 <td>{{ item.name }}</td>
-                <td>{{ departments[selectedDepartment].name }}</td>
-                <td><router-link :to="{ name: 'Employee-id', params: {id: item.id }}">詳細</router-link></td>
+                <td>{{ departments[item.department].name }}</td>
+                <td><router-link :to="{ name: 'Employee-id', params: { id: item.id } }">詳細</router-link></td>
+
+
             </tr>
         </tbody>
     </v-table>
+
 </template>
 
 <script>
@@ -80,9 +103,13 @@ export default {
     data() {
         return {
             selectedDepartment: null,
-            index:0,
-            list:[],
-            data:[],
+            index: 0,
+            list: [],
+            data: [],
+            search: "",
+            searchName: "",
+            searchId: "",
+            selectedEmployees: [],
 
             departments: {
                 'i1': {
@@ -107,7 +134,7 @@ export default {
                     id: 'jy0001',
                     name: 'AAA',
                     department: 'i1',
-                    
+
 
                 },
                 {
@@ -156,21 +183,37 @@ export default {
                     department: 'i2',
                 },
             ],
+
+            rules: {
+                name: [val => this.searchId.length > 0 || (val || '').length > 0 || '必須'],
+                id: [val => this.searchName.length > 0 || (val || '').length > 0 || '必須'],
+            },
+
         }
     },
+
     methods: {
         selectDepartment(department) {
             this.selectedDepartment = department.id
+            this.selectedEmployees = this.employees.filter(e => e.department == this.selectedDepartment)
         },
-        goToData(){
+        goToData() {
             this.$router.push('/data')
         },
-        newlogin(){
+        newlogin() {
             this.$router.push('/newlogin')
+        },
+        searchEmployee() {
+            this.$refs.form.validate().then((v) => {
+                if (v.valid)
+                    this.selectedEmployees = this.employees.filter(e => this.searchId ? (e.id.includes(this.searchId)) : true).filter(e => this.searchName ? (e.name.includes(this.searchName)) : true)
+            })
+
         }
-        
     }
 }
+
+
 
 
 </script>

@@ -10,8 +10,7 @@ import { ref } from 'vue'
 
 <template>
     <v-app-bar app>
-        ooさん 管理  
-        
+        ooさん 管理
         <router-link to="./login">ログアウト</router-link>
 
     </v-app-bar>
@@ -19,7 +18,7 @@ import { ref } from 'vue'
 
     <div id="box">
         <div class="add">
-            <v-card width="400px" >
+            <v-card width="400px">
                 <v-card-title>
                     <h1 class="display-1">ooさん Welcome</h1>
                 </v-card-title>
@@ -29,9 +28,11 @@ import { ref } from 'vue'
         </div>
     </div>
     <v-content>
-        <v-btn color="primary" elevation="24"  outlinedlarge @click="goToManagement()">社員管理</v-btn>
-        <v-btn color="primary" elevation="24" large @click="goToData()">監視データ</v-btn>
-
+        <v-layout wrap>
+            <v-btn width="100px" block color="primary" x-large elevation="21" @click="goToManagement()">社員管理</v-btn>
+            <v-btn width="200px" block color="primary" x-large elevation="21" @click="goToData()">監視データ</v-btn>
+            
+        </v-layout>
     </v-content>
 
 
@@ -44,13 +45,13 @@ export default {
         goToManagement() {
             this.$router.push('/management')
         },
-        goToData(){
+        goToData() {
             this.$router.push('/data')
         },
-        
 
-        }
+
     }
+}
 
 </script>
 
@@ -59,31 +60,31 @@ export default {
 .read-the-docs {
     color: #888;
 }
-button {
-    
-  font-size: 1.6rem;
-  font-weight: 700;
-  line-height: 1.5;
-  height: 48px;
-  min-width: 80%;
-  
-  background-color: white;
-  color: blue;
-  border: solid 1px blue;
-  border-radius: 2px;
-  padding: 0 24px;
-  cursor: pointer;
 
-  
-  border-radius: 0.5rem;
+button {
+
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.5;
+    height: 48px;
+    min-width: 40%;
+    min-height: 40%;
+    background-color: white;
+    color: blue;
+    border: solid 1px blue;
+    border-radius: 2px;
+    padding: 0 24px;
+    cursor: pointer;
+    border-radius: 0.5rem;
+
 }
- 
+
 
 .add {
     width: 400px;
     padding: 10px 50px;
     margin: 10px auto;
-   
+
     border-radius: 5px;
 }
 

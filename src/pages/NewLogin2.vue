@@ -1,7 +1,7 @@
 <template>
     <v-app-bar app>
         ooさん 管理
-        <v-btn color="primary" elevation="2" large>社員管理</v-btn>
+        <v-btn color="primary" elevation="2" large @click="goToManagement()">社員管理</v-btn>
         <v-btn color="primary" elevation="2" large @click="goToData()">監視データ</v-btn>
         <router-link to="/login">ログアウト</router-link>
     </v-app-bar>
@@ -10,9 +10,11 @@
     </v-navigation-drawer>
 
     <v-content>
-        <h1 align="center">ご登録ありがとうございます。
+        <h1 align="center" >ご登録ありがとうございます。
         PW配布メールを送りました。</h1>
-       
+
+
+       <router-link to="/employee/jy0001">詳細画面に戻る</router-link>
 
     </v-content>
 
@@ -27,6 +29,15 @@ export default {
             dialog: false,
         }
     },
+    methods:{
+    goToManagement() {
+      this.$router.push('/management')
+    },
+    goToData() {
+            this.$router.push('/data')
+        },
+}
+
 
 
    

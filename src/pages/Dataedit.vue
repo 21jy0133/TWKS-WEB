@@ -3,22 +3,15 @@
 <template>
   <v-app-bar app>
     ooさん 管理
-
-
     <v-btn color="primary" elevation="2" large @click="goToManagement()">社員管理</v-btn>
     <v-btn color="primary" elevation="2" large @click="goToData()">監視データ</v-btn>
     <router-link to="/login">ログアウト</router-link>
 
   </v-app-bar>
-
-
   <v-content>
-
     <v-container>
-
       <v-form ref="form">
         <v-row>
-
           <v-col cols="12" sm="4"><v-text-field :rules="rules.id" required v-model="searchId"
               label="社員番号"></v-text-field></v-col>
           <v-col cols="12" sm="4"> <v-text-field :rules="rules.name" required v-model="searchName"
@@ -33,8 +26,12 @@
           選択日付: {{ pickedDate }}
         </div>
       </v-form>
+
     </v-container>
   </v-content>
+  <hr>
+  <p>デフォルトの日時：</p>
+  <h3>2023年2月16日</h3>
 
 
   <v-navigation-drawer floating permanent>
@@ -64,12 +61,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item in selectedEmployees" :key="item.id">
+      <tr v-for="item in selectedEmployees" :key="jy0001">
         <td>{{ item.id }}</td>
         <td>{{ item.name }}</td>
         <td> <v-chart @click="chartClickHandler" class="chart" :option="option" /> </td>
-       
-        <router-link to="/dataedit"  @click="gotoDataedit" >編集</router-link>
+        <router-link to="/dataedit" @click="gotoDataedit">編集</router-link>
 
       </tr>
     </tbody>
@@ -174,8 +170,8 @@ export default {
         },
 
       ],
-      option: {
-        /*
+      option :{
+          /*
         title: {
           text: 'Stacked Line'
         },*/
@@ -195,10 +191,6 @@ export default {
           containLabel: true
         },
 
-
-        toolbox: {
-          show: true,
-        },
         xAxis: {
           //type: 'category',
           //nameLocation: 'middle',
@@ -222,7 +214,7 @@ export default {
           seriesIndex: 0,
         },
         series: [
-          {
+        {
             name: 'マウスクリック',
             triggerLineEvent: true,
             type: 'line',
@@ -267,8 +259,8 @@ export default {
             data: [1000, 932, 901, 934, 1290, 1330, 1320, 1000, 932, 901, 934, 1290, 1330, 1320, 134, 90, 230, 210, '-', 101, 134, 90, 230,],
 
           },
-        ],
-      }
+        ]
+      },
     }
   },
   methods: {
@@ -285,7 +277,9 @@ export default {
     goToManagement() {
       this.$router.push('/management')
     },
-    
+    gotoDataedit() {
+      this.$router.push('/dataedit')
+    },
     searchEmployee() {
       this.$refs.form.validate().then((v) => {
         if (v.valid)
