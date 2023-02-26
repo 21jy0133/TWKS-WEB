@@ -15,6 +15,12 @@
       </div>
    </v-content>
 </template>
+
+<route lang="yaml">
+   meta: { requiresAuth: false} 
+</route>
+
+
 <style>
 .index {
    background-color: #ffefd5;

@@ -1,42 +1,43 @@
 <template>
   <v-app>
-    <v-app-bar app>
-   TWKSシステム
-    </v-app-bar>
+    
+    <AppBar></AppBar>
 
     <v-main>
-    <router-view />
+      <router-view />
     </v-main>
 
+
+    <vue-element-loading :active="$loading.active" is-full-screen />
+
     <v-footer app>
-      KH株式会社
-  </v-footer>
+      KH株式会社 {{ $loading }}
+    </v-footer>
 
   </v-app>
 </template>
 
 <script>
-import {useRoute} from 'vue-router'
-import {computed} from 'vue'
-import path from 'path'
-
-
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+import AppBar from './components/AppBar.vue';
 
 export default {
-  
 
+  components: {
+    AppBar
+  },
 
-setup() {
-   const route=useRoute();
+  setup() {
+    const route = useRoute();
 
-   const path = computed(() =>route.path)
-   const name = computed(() =>route.name)
-   console.log(path)
-   console.log(name)
-   console.log(route)
-}}
+    const path = computed(() => route.path)
+    const name = computed(() => route.name)
+    console.log(path)
+    console.log(name)
+    console.log(route)
+  }
+}
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

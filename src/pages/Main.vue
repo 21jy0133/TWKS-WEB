@@ -9,37 +9,31 @@ import { ref } from 'vue'
 </script>
 
 <template>
-    <v-app-bar app>
-        ooさん 管理
-        <router-link to="./login">ログアウト</router-link>
-
-    </v-app-bar>
-
 
     <div id="box">
         <div class="add">
             <v-card width="400px">
-                <v-card-title>
-                    <h1 class="display-1">ooさん Welcome</h1>
-                </v-card-title>
-                <v-card-text>
-                </v-card-text>
             </v-card>
         </div>
     </div>
     <v-content>
         <v-layout wrap>
-            <v-btn width="100px" block color="primary" x-large elevation="21" @click="goToManagement()">社員管理</v-btn>
-            <v-btn width="200px" block color="primary" x-large elevation="21" @click="goToData()">監視データ</v-btn>
-            
+            <v-btn block color="primary" x-large elevation="21" @click="goToManagement()">社員管理</v-btn>
+            <v-btn class="ml-4" block color="primary" x-large elevation="21" @click="goToData()">監視データ</v-btn>
+
         </v-layout>
     </v-content>
 
 
 </template>
+
+
 <script>
 
+
 export default {
+
+    meta: { requiresAuth: false },
 
     methods: {
         goToManagement() {

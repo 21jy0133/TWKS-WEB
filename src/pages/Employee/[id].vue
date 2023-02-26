@@ -1,68 +1,65 @@
 <template>
-    <v-app-bar app>
-        ooさん 管理
-
-
-        <v-btn color="primary" elevation="2" large>社員管理</v-btn>
-        <v-btn color="primary" elevation="2" large @click="goToData()">監視データ</v-btn>
-        <router-link to="/login">ログアウト</router-link>
-
-    </v-app-bar>
+    <div v-if="!deleted">
     <h1 text-align="center">社員詳細情報</h1>
-    <div id="table">
+
+    <div class= "mb-8" v-if="employeeData" id="table">
         <thead>
             <tr>
                 <td>社員番号：</td>
-                <td>{{ e.id }}</td>
+                <td>{{ employeeData.empId }}</td>
             </tr>
             <tr>
                 <td>メールアドレス：</td>
-                <td>{{ e.mail }}</td>
+                <td>{{ employeeData.email }}</td>
             </tr>
             <tr>
                 <td>名前：</td>
 
-                <td>{{ e.name }}</td>
+                <td>{{ employeeData.name }}</td>
             </tr>
             <tr>
                 <td>フリガナ：</td>
-                <td>{{ e.kana }}</td>
+                <td>{{ employeeData.kana }}</td>
             </tr>
             <tr>
                 <td>電話番号：</td>
-                <td>{{ e.tel }}</td>
+                <td>{{ employeeData.tel }}</td>
             </tr>
             <tr>
                 <td>郵便番号：</td>
-                <td>{{ e.post }}</td>
+                <td>{{ employeeData.postCode }}</td>
             </tr>
             <tr>
                 <td>住所：</td>
-                <td>{{ e.address }}</td>
+                <td>{{ employeeData.address }}</td>
             </tr>
             <tr>
                 <td>生年月日：</td>
-                <td>{{ e.birthday }}</td>
+                <td>{{ employeeData.birthday }}</td>
+            </tr>
+            <tr>
+                <td>性別：</td>
+                <td>{{ employeeData.sex }}</td>
             </tr>
             <tr>
                 <td>部署：</td>
-                <td>{{ e.departments }}</td>
+                <td>{{ employeeData.department.deptName }}</td>
             </tr>
             <tr>
                 <td>職役：</td>
-                <td>{{ e.office }}</td>
+                <td>{{ employeeData.jobTitle.name }}</td>
             </tr>
             <tr>
                 <td>入社日：</td>
-                <td>{{ e.joiningdate }}</td>
+                <td>{{ employeeData.initDate }}</td>
             </tr>
 
         </thead>
 
     </div>
-    <v-btn color="primary" elevation="2" @click="goToManagement()" large>戻る</v-btn>
-    <v-btn color="primary" elevation="2" large @click="gotoNewlogin3()">情報更新</v-btn>
-    <v-dialog v-model="dialog" persistent>
+    <v-btn class="mx-2" color="primary" elevation="2" @click="goBack()" large>戻る</v-btn>
+    <v-btn v-if="$store.state.user.userDetail.department.deptCode == 'k01'" class="mx-2" color="primary" elevation="2" large @click="gotoUpdate()">情報更新</v-btn>
+    <v-dialog v-if="$store.state.user.userDetail.department.deptCode == 'k01'" v-model="dialog" persistent>
         <template v-slot:activator="{ props }">
             <v-btn color="pink" v-bind="props">
                 アカウント削除
@@ -85,15 +82,16 @@
         </v-card>
     </v-dialog>
 
-    <div v-if="e">
-        {{ }}
-    </div>
-    <div v-else>
-        404
-    </div>
+</div>
+
+    <div v-if="deleted">
+        <h1>該当社員のアカウントを削除しました</h1>
+    </div >
 </template>
 
 <script>
+import EmployeeService from '../../services/employee.service'
+
 
 
 
@@ -102,125 +100,10 @@ export default {
     data() {
         return {
             dialog: false,
-            selectedDepartment: null,
-            selectOffice: null,
+            deleted: false,
             index: 0,
             list: [],
-            data: [],
-
-            departments: {
-                'i1': {
-                    id: 'i1',
-                    name: '情報一課'
-                },
-                'i2': {
-                    id: 'i2',
-                    name: '情報二課'
-                },
-                'b1': {
-                    id: 'b1',
-                    name: '営業課'
-                },
-                'm1': {
-                    id: 'm1',
-                    name: '管理課'
-                },
-            },
-            selectOffice: {
-                'o1': {
-                    id: 'o1',
-                    name: '社員'
-                },
-                'o2': {
-                    id: 'o2',
-                    name: 'リーダー'
-                },
-                'o3': {
-                    id: 'o3',
-                    name: '管理'
-                }
-
-            },
-            employees: [
-                {
-
-                    id: 'jy0001',
-                    mail: '21jy0133@jec.ac.jp',
-                    name: 'AAA',
-                    kana: 'あああ',
-                    tel: '0801234567',
-                    post: '1170000',
-                    address: '新宿区1-1-1',
-                    birthday: '1990年1月1日',
-                    departments: 'i1',
-                    office: 'o1',
-                    joiningdate: '2000年4月1日'
-
-
-                },
-                {
-                    id: 'jy0002',
-                    name: 'BBB',
-                    department: 'i1',
-                    kana: 'いいい',
-                    tel: '0801234567',
-                    post: '1170000',
-                    address: '新宿区1-1-2',
-                    birthday: '1990年2月1日',
-                    departments: '情報一課',
-                    office: '社員',
-                    office: 'o1',
-                    joiningdate: '2000年4月1日'
-
-                },
-                {
-                    id: 'jy0003',
-                    name: 'CCC',
-                    kana:'ううう',
-                    tel: '0801234567',
-                    post: '1170000',
-                    address: '新宿区1-1-2',
-                    birthday: '1991年3月1日',
-                    department: 'i1',
-                    office: 'o1',
-                    joiningdate: '2021年4月1日'
-                },
-                {
-                    id: 'jy0004',
-                    name: 'DDD',
-                    department: 'i1',
-                },
-                {
-                    id: 'jy0005',
-                    name: 'EEE',
-                    department: 'i1',
-                },
-                {
-                    id: 'jy0006',
-                    name: 'FFF',
-                    department: 'i1',
-                },
-                {
-                    id: 'jy0007',
-                    name: 'GGG',
-                    department: 'i2',
-                },
-                {
-                    id: 'jy0008',
-                    name: 'HHH',
-                    department: 'i2',
-                },
-                {
-                    id: 'jy0009',
-                    name: 'III',
-                    department: 'i2',
-                },
-                {
-                    id: 'jy0010',
-                    name: 'JJJ',
-                    department: 'i2',
-                },
-            ],
+            employeeData: null,
         }
     },
     methods: {
@@ -229,21 +112,37 @@ export default {
         },
 
 
-        goToManagement() {
-            this.$router.push('/management')
+        goBack() {
+            this.$router.go(-1)
         },
         gotoDelete(){
-            this.$router.push('/deleted')
+
+            EmployeeService.deleteEmployeeById(this.employeeData.empId).then(res => {
+                this.deleted = true
+            })
         },
-        gotoNewlogin3(){
-            this.$router.push('/newlogin3')}
+        gotoUpdate(){
+            this.$router.push({name:'Employee-update-id', params: { id: this.$route.params.id }})
+
+        }
 
     },
     computed: {
-        e() {
-            return this.employees.filter(x => x.id == this.$route.params.id)[0]
-        }
     },
+    mounted() {
+
+        EmployeeService.getEmployeeById(this.$route.params.id).then( res => {
+            
+
+            if (res.data.department.deptCode != this.$store.state.user.userDetail.department.deptCode && this.$store.state.user.userDetail.department.deptCode !='k01' ) {
+                this.$router.push("/403")
+            }
+
+            this.employeeData = res.data
+
+        }).catch(error => this.$router.push("/404"))
+
+    }
 }
 
 

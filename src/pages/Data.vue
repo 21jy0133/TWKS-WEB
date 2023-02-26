@@ -1,21 +1,8 @@
 
 
 <template>
-  <v-app-bar app>
-    ooさん 管理
-
-
-    <v-btn color="primary" elevation="2" large @click="goToManagement()">社員管理</v-btn>
-    <v-btn color="primary" elevation="2" large @click="goToData()">監視データ</v-btn>
-    <router-link to="/login">ログアウト</router-link>
-
-  </v-app-bar>
-
-
   <v-content>
-
     <v-container>
-
       <v-form ref="form">
         <v-row>
 
@@ -29,8 +16,7 @@
           </v-col>
         </v-row>
         <div>
-          <Datepicker v-model="pickedDate"></Datepicker>
-          選択日付: {{ pickedDate }}
+          <Datepicker v-model="pickedDate" :enable-time-picker="false"></Datepicker>
         </div>
       </v-form>
     </v-container>
@@ -39,9 +25,10 @@
 
   <v-navigation-drawer floating permanent>
     <v-list dense rounded>
-      <v-list-item v-for=" item in departments" @click="selectDepartment(item)" :key="item.id" link>
+      <v-list-item :active="item.deptCode == this.selectDepartment" v-for=" item in departments"
+        @click="selectDepartment(item.deptCode)" :key="item.id" link>
         <v-list-item-content>
-          <v-list-item-title>{{ item.name }}</v-list-item-title>
+          <v-list-item-title>{{ item.deptName }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -65,29 +52,49 @@
     </thead>
     <tbody>
       <tr v-for="item in selectedEmployees" :key="item.id">
-        <td>{{ item.id }}</td>
+        <td>{{ item.empId }}</td>
         <td>{{ item.name }}</td>
-        <td> <v-chart @click="chartClickHandler" class="chart" :option="option" /> </td>
-       
-        <router-link to="/dataedit"  @click="gotoDataedit" >編集</router-link>
+        <td>
+          <DataChart :empId="item.empId" :pickedDate="pickedDate"></DataChart>
+        </td>
+
+        <td>
+
+          <router-link :to="'/employee/data/' + item.empId + '?pickedDate='+ pickedDate.getTime()">詳細</router-link>
+
+          <router-link v-if="$store.state.user.userDetail.jobTitle.code == 'k'" class="ml-2" :to="'/employee/data/edit/' + item.empId + '?pickedDate='+ pickedDate.getTime()">編集</router-link>
+
+        </td>
 
       </tr>
     </tbody>
-</v-table>
+  </v-table>
 </template>
 
 <script>
-import { looseIndexOf } from '@vue/shared';
-import { getCurrentInstance, onMounted } from 'vue';
-import "echarts";
+import DepartmentService from '../services/department.service';
+import DataChart from '../components/DataChart.vue'
+import EmployeeService from '../services/employee.service';
 //import * as echarts from 'echarts';
 
 export default {
+
+  components: {
+    DataChart
+  },
+  watch: {
+    // whenever question changes, this function will run
+    pickedDate() {
+      //console.log('pickedDate', this.pickedDate, this.$route.query.pickedDate, new Date(this.$route.query.pickedDate))
+      this.$router.replace({ query: { ...this.$route.query, pickedDate: this.pickedDate.getTime() } })
+    },
+  },
+
   data() {
     return {
       menu: "",
       text: "",
-      pickedDate: "",
+      pickedDate: null,
 
       selectedDepartment: null,
       //selecteddatadata: null,
@@ -102,196 +109,51 @@ export default {
         id: [val => this.searchName.length > 0 || (val || '').length > 0 || '必須'],
       },
 
-      departments: {
-        'i1': {
-          id: 'i1',
-          name: '情報一課'
-        },
-        'i2': {
-          id: 'i2',
-          name: '情報二課'
-        },
-        'b1': {
-          id: 'b1',
-          name: '営業課'
-        },
-        'm1': {
-          id: 'm1',
-          name: '管理課'
-        },
-      },
-      employees: [
-        {
-          id: 'jy0001',
-          name: 'AAA',
-          department: 'i1',
 
-        },
-        {
-          id: 'jy0002',
-          name: 'BBB',
-          department: 'i1',
-        },
-        {
-          id: 'jy0003',
-          name: 'CCC',
-          department: 'i1',
-        },
-        {
-          id: 'jy0004',
-          name: 'DDD',
-          department: 'i1',
-        },
-        {
-          id: 'jy0005',
-          name: 'EEE',
-          department: 'i1',
-        },
-        {
-          id: 'jy0006',
-          name: 'FFF',
-          department: 'i1',
-        },
-        {
-          id: 'jy0007',
-          name: 'GGG',
-          department: 'i2',
-        },
-        {
-          id: 'jy0008',
-          name: 'HHH',
-          department: 'i2',
-        },
-        {
-          id: 'jy0009',
-          name: 'III',
-          department: 'i2',
-        },
-        {
-          id: 'jy0010',
-          name: 'JJJ',
-          department: 'i2',
-        },
-
-      ],
-      option: {
-        /*
-        title: {
-          text: 'Stacked Line'
-        },*/
-        tooltip: {
-          trigger: 'axis',
-
-        },
-        /*
-        legend: {
-          data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine']
-        },*/
-
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '4%',
-          containLabel: true
-        },
-
-
-        toolbox: {
-          show: true,
-        },
-        xAxis: {
-          //type: 'category',
-          //nameLocation: 'middle',
-          //boundaryGap: false,
-          data: ['9:00', '9:10', '9:20', '9:30', '9:40', '9:50', '10:00', '10:10', '10:20', '10:30', '10:40', '10:50', '11:00', '11:10', '11:20', '11:30', '11:40', '11:50', '12:00', '13:00', '13:10', '13:20', '13:30', '13:40', '13:50', '14:00', '14:10', '14:20', '14:30', '14:40', '14:50', '15:00', '16:00', '17:00']
-        },
-        yAxis: {
-          //type: 'value',
-          //axisLabel: {
-          //formatter: '{value}'
-          //},
-
-          //axisPointer: {
-          // snap: true
-          //}
-        },
-        visualMap: {
-          type: 'piecewise',
-          show: false,
-          dimension: 0,
-          seriesIndex: 0,
-        },
-        series: [
-          {
-            name: 'マウスクリック',
-            triggerLineEvent: true,
-            type: 'line',
-
-            smooth: true,
-            stack: 'Total',
-            data: [1200, 132, 101, 134, 90, 230, 210, 70, 182, 191, 234, 290, 330, 310, 191, 234, 290, 330, '-', '-', 210, 101, 134, 90, 210, 70],
-            markArea: {
-              itemStyle: {
-                color: 'rgba(255, 173, 177, 0.4)'
-              },
-
-              data: [
-                [
-
-                  {
-                    name: '休憩時間',
-                    xAxis: '12:00',
-                  },
-                  {
-                    xAxis: '13:00'
-                  }
-
-                ]
-              ],
-            }
-          },
-          {
-            triggerLineEvent: true,
-            name: 'キーボードクリック',
-            type: 'line',
-            stack: 'Total',
-            data: [700, 182, 191, 234, 290, 330, 310, 120, 132, 101, 134, 90, 230, 210, 101, 134, 90, 230, '-', 310, 191, 234, 290, 1330, 1320],
-
-
-          },
-          {
-            triggerLineEvent: true,
-            name: 'マウス移動',
-            type: 'line',
-            stack: 'Total',
-            data: [1000, 932, 901, 934, 1290, 1330, 1320, 1000, 932, 901, 934, 1290, 1330, 1320, 134, 90, 230, 210, '-', 101, 134, 90, 230,],
-
-          },
-        ],
-      }
+      departments: [],
+      employees: [],
     }
   },
   methods: {
-    selectDepartment(department) {
-      this.selectedDepartment = department.id
-      this.selectedEmployees = this.employees.filter(e => e.department == this.selectedDepartment)
+    selectDepartment(deptCode) {
+      this.selectedDepartment = deptCode
+      this.$router.replace({ query: { deptCode: deptCode, pickedDate: this.pickedDate.getTime() } })
+      this.selectEmployee(this.selectedDepartment)
     },
     goToData() {
       this.$router.push('/data')
     },
     newlogin() {
-      this.$router.push('/newlogin')
+      this.$router.push('/employee/add')
     },
-    goToManagement() {
-      this.$router.push('/management')
-    },
-    
     searchEmployee() {
       this.$refs.form.validate().then((v) => {
         if (v.valid)
-          this.selectedEmployees = this.employees.filter(e => this.searchId ? (e.id.includes(this.searchId)) : true).filter(e => this.searchName ? (e.name.includes(this.searchName)) : true)
+          this.$router.replace({ query: { searchId: this.searchId, searchName: this.searchName, pickedDate: this.pickedDate.getTime() } })
+        EmployeeService.seachEmployeesByIdOrName(this.searchId, this.searchName).then(response => {
+
+          this.selectedEmployees = response.data._embedded.employee.filter(x=>x.department.deptCode== this.$store.state.user.userDetail.department.deptCode || this.$store.state.user.userDetail.department.deptCode =='k01')
+
+        }
+
+        ).catch(error => console.log(error))
       })
+
     },
+    selectEmployee(deptCode) {
+
+      console.log("selectEmployee")
+      EmployeeService.getEmployeesByDept(deptCode).then(response => {
+
+        this.selectedEmployees = response.data._embedded.employee.filter(x=>x.department.deptCode== this.$store.state.user.userDetail.department.deptCode || this.$store.state.user.userDetail.department.deptCode =='k01')
+
+      }
+
+      ).catch(error => console.log(error))
+
+    },
+
+
     chartClickHandler(params) {
       console.log(params)
       this.$router.push('/image')
@@ -303,12 +165,59 @@ export default {
       this.menu = false;
       return;
     },
+
   },
+
   mounted() {
+
+    console.log('this.$loading.active', this.$loading.active)
+    this.$loading.active = true
+
+    console.log('this.$loading.active', this.$loading.active)
+
+
+
+    DepartmentService.getDepartments().then(response => {
+
+      
+
+      this.departments = response.data._embedded.department.filter(x=>x.deptCode== this.$store.state.user.userDetail.department.deptCode || this.$store.state.user.userDetail.department.deptCode =='k01')
+
+      if (this.$route.query.pickedDate && this.$route.query.pickedDate.length > 0) {
+        console.log(this.$route.query.pickedDate)
+
+        this.pickedDate = new Date(this.$route.query.pickedDate*1)
+
+      }
+      else {
+
+        let d = new Date();
+        d.setDate(d.getDate() - 1);
+        d.setMinutes(0)
+        d.setHours(17)
+        this.pickedDate = d // .toLocaleString( 'sv' ).slice(0,10);
+
+      }
+
+      if (this.$route.query.deptCode) {
+
+        this.selectDepartment(this.$route.query.deptCode)
+
+      }
+
+      if (this.$route.query.searchName || this.$route.query.searchId) {
+        this.searchId = this.$route.query.searchId
+        this.searchName = this.$route.query.searchName
+        this.searchEmployee()
+      }
+
+      this.$loading.active = false
+
+    }
+
+    ).catch(error => console.log(error))
+
   },
-
-
-
 }
 
 </script>

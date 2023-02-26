@@ -10,14 +10,13 @@
     </v-navigation-drawer>
 
     <v-content>
-        <h1 align="center" >ご登録ありがとうございます。
-        PW配布メールを送りました。</h1>
+        <h1 align="center">ご登録ありがとうございます。
+            PW配布メールを送りました。</h1>
 
 
-       <router-link to="/employee/jy0001">詳細画面に戻る</router-link>
+        <router-link to="/employee/jy0001">詳細画面に戻る</router-link>
 
     </v-content>
-
 </template>
   
 <script>
@@ -29,19 +28,21 @@ export default {
             dialog: false,
         }
     },
-    methods:{
-    goToManagement() {
-      this.$router.push('/management')
-    },
-    goToData() {
+    methods: {
+        goToManagement() {
+            this.$router.push('/management')
+        },
+        goToData() {
             this.$router.push('/data')
         },
-}
+    },
+    mounted() {
 
+        EmployeeService.getEmployeeById(this.$route.params.id).then(res => {
+            this.employeeData = res.data
+        }).catch(error => console.log(error))
 
-
-   
-
+    }
 
 }
 
