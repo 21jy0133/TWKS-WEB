@@ -11,7 +11,7 @@
     <vue-element-loading :active="$loading.active" is-full-screen />
 
     <v-footer app>
-      KH株式会社 {{ $loading }}
+      KH株式会社
     </v-footer>
 
   </v-app>

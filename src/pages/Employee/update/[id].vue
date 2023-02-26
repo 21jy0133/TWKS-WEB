@@ -168,6 +168,7 @@
 </template>
   
 <script>
+import { setTransitionHooks } from 'vue'
 import DepartmentService from '../../../services/department.service'
 import EmployeeService from '../../../services/employee.service'
 import JobTitleService from '../../../services/jobTitle.service'
@@ -230,6 +231,7 @@ export default {
         this.updated = true
         this.confirmMode = false
         window.scrollTo(0,0);
+        this.$router.push('/employee/'+ this.employeeData.empId)
       }).catch(error => console.log(error))
     }
   },
