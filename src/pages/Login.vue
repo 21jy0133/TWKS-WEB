@@ -15,10 +15,14 @@
 
                         <v-card-subtitle>パスワード</v-card-subtitle>
                         <v-text-field v-model="password" :rules="pwRules" label="パスワード" :counter="12"
-                            required></v-text-field>
-
-                        <v-btn color="primary" elevation="2" large :disabled="invalid" @click="validate()">ログイン</v-btn>
+                            :type="showPassword ? 'text' : 'password'"
+                            :append-icon="showPassword ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+                            @click:append="showPassword = !showPassword" required></v-text-field>
+                        <p v-if="message">{{ message }}</p>
+                        <v-btn class='my-4' color="primary" elevation="2" large :disabled="invalid"
+                            @click="validate()">ログイン</v-btn>
                     </v-form>
+
                 </v-card-text>
             </v-card>
         </div>
@@ -42,7 +46,10 @@ export default {
     data: () => ({
         valid: true,
         password: '',
+        message: null,
         invalid: false,
+        isError: false,
+        showPassword: true,
         pwRules: [
             v => !!v || '必要項目',
             //v => (v && v.length !== 12) || '12位入力してください',
@@ -71,7 +78,7 @@ export default {
                 },
                 (error) => {
                     this.loading = false;
-                    this.message =
+                    this.message = (error.response && error.response.status == 401) ? 'メールアドレスまたはパスワードが正しくありません' :
                         (error.response &&
                             error.response.data &&
                             error.response.data.message) ||
@@ -91,7 +98,7 @@ export default {
                 this.handleLogin(user)
 
             } else {
-                //this.$toast.error('Form is invalid, please check your input')
+                //this.$refs.snackbar.open()
             }
         },
     },
@@ -114,5 +121,9 @@ export default {
 
 h2 {
     text-align: center;
+}
+
+p {
+    color: red;
 }
 </style>

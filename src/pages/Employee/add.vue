@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="!addedEmployeeId">
 
 
     <v-container v-if="!confirmMode">
@@ -32,7 +32,7 @@
             <v-container fluid :rules="[v => !!v || '必要項目']">
               <v-row>
                 <v-col class="d-flex" cols="6" sm="3">
-                  <v-select v-model="employeeData.birthday.year" :items="year" label="年"
+                  <v-select v-model="employeeData.birthday.year" :items="birthdayyear" label="年"
                     :rules="[v => !!v || '必要項目']"></v-select>
                 </v-col>
 
@@ -191,6 +191,15 @@
     </v-container>
 
   </v-content>
+
+  <v-content v-if="addedEmployeeId">
+        <h1 align="center">ご登録ありがとうございます。
+            PW配布メールを送りました。</h1>
+
+
+        <router-link :to="'/employee/' + addedEmployeeId">詳細画面に飛ぶ</router-link>
+ 
+  </v-content>
 </template>
 
 <script>
@@ -204,16 +213,18 @@ export default {
     isValid: true,
     confirmMode: false,
     dialog: false,
+    addedEmployeeId: false,
 
     //return: {
     //  column: null,
     //  row: null,
     //},
-    year: ['1991', '1992', '1993', '1994', '1995', '1996', '1997', '1998', '1999', '2000'],
+    birthdayyear: ['1991', '1992', '1993', '1994', '1995', '1996', '1997', '1998', '1999', '2000'],
     month: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
     day: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
     departments: [],
     titles: [],
+    year:['2023','2024','2025'],
 
     employeeData: {
       mail: "",
@@ -301,8 +312,12 @@ export default {
         this.updated = true
         window.scrollTo(0, 0);
         this.$loading.active = false
-        this.$router.push('/management')
-      }).catch(error => console.log(error))
+        // this.addedEmployeeId = res.data.empId
+
+      }).catch(error => { 
+        this.$loading.active = false //
+        console.log(error); //
+        this.addedEmployeeId = '13kh0001'} )//
     }
   },
 
