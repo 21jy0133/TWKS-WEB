@@ -30,7 +30,7 @@
 </template>
 
 <route lang="yaml">
-    meta: { requiresAuth: false} 
+    meta: { requiresAuth: false, requireNoAuthed: true} 
  </route>
 
 <script>

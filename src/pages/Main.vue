@@ -33,7 +33,7 @@ import { ref } from 'vue'
 
 export default {
 
-    meta: { requiresAuth: false },
+    meta: { requiresAuth: true },
 
     methods: {
         goToManagement() {

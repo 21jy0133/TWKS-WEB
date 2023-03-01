@@ -309,15 +309,15 @@ export default {
       postData.initDate = this.concatDate(postData.initDate.year, postData.initDate.month, postData.initDate.day)
 
       EmployeeService.registEmployee(postData).then(res => {
-        this.updated = true
         window.scrollTo(0, 0);
         this.$loading.active = false
-        // this.addedEmployeeId = res.data.empId
+        this.addedEmployeeId = res.data.empId
 
       }).catch(error => { 
+        alert('error')
         this.$loading.active = false //
         console.log(error); //
-        this.addedEmployeeId = '13kh0001'} )//
+        this.addedEmployeeId = 'null'} )//
     }
   },
 

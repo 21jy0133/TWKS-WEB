@@ -84,7 +84,13 @@ router.beforeEach(async (to, from, next) => {
   if (!noAuthRequired && !store.state.auth.status.loggedIn) {
     next('/login');
   } else {
-    next();
+    if (to.meta.requireNoAuthed && store.state.auth.status.loggedIn) {
+      next('/main')
+
+    } else {
+      next();
+    }
+    
   }
 });
 
