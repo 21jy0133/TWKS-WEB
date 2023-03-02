@@ -34,8 +34,9 @@
             <v-container fluid>
               <v-row>
                 <v-col class="d-flex" cols="6" sm="4">
-                  <v-select v-model="employeeData.department.deptCode" :items="departments" label="部署"
-                    :rules="[v => !!v || '必要項目']" item-value="deptCode" item-title="deptName"></v-select>
+                  <v-select v-model="employeeData.department.deptCode" :items="departments"
+                    :disabled="($store.state.user.userDetail.jobTitle.code == 'k' && employeeData.empId == $store.state.user.userDetail.empId) || (employeeData.department.deptCode == 'k01' && employeeData.jobTitle.code == 'k' && $store.state.user.userDetail.jobTitle.code == 's')"
+                    label="部署" :rules="[v => !!v || '必要項目']" item-value="deptCode" item-title="deptName"></v-select>
                 </v-col>
 
               </v-row>
@@ -44,8 +45,9 @@
             <v-container fluid>
               <v-row>
                 <v-col class="d-flex" cols="6" sm="4">
-                  <v-select v-model="employeeData.jobTitle.code" :items="titles" label="役職" :rules="[v => !!v || '必要項目']"
-                    item-value="code" item-title="name"></v-select>
+                  <v-select v-model="employeeData.jobTitle.code" :items="titles"
+                    :disabled="($store.state.user.userDetail.jobTitle.code == 'k' && employeeData.empId == $store.state.user.userDetail.empId) || (employeeData.department.deptCode == 'k01' && employeeData.jobTitle.code == 'k' && $store.state.user.userDetail.jobTitle.code == 's')"
+                    label="役職" :rules="[v => !!v || '必要項目']" item-value="code" item-title="name"></v-select>
                 </v-col>
 
               </v-row>
@@ -105,13 +107,13 @@
         </v-col>
         <v-col cols="12">
           部署
-          <v-select v-model="employeeData.department.deptCode" :items="departments" disabled
-                    :rules="[v => !!v || '必要項目']" item-value="deptCode" item-title="deptName"></v-select>
+          <v-select v-model="employeeData.department.deptCode" :items="departments" disabled :rules="[v => !!v || '必要項目']"
+            item-value="deptCode" item-title="deptName"></v-select>
         </v-col>
         <v-col cols="12">
           役職
           <v-select v-model="employeeData.jobTitle.code" :items="titles" disabled :rules="[v => !!v || '必要項目']"
-                    item-value="code" item-title="name"></v-select>
+            item-value="code" item-title="name"></v-select>
         </v-col>
         <v-col cols="12">
           <v-input :messages="[employeeData.sex]">
@@ -124,44 +126,29 @@
           </v-input>
         </v-col>
       </v-row>
-      <v-btn color="primary" elevation="2" large @click="confirmMode=false">戻る</v-btn>
+      <v-btn color="primary" elevation="2" large @click="confirmMode = false">戻る</v-btn>
 
-    <v-dialog
-      v-model="dialog"
-      persistent
-      width="auto"
-    >
-      <template v-slot:activator="{ props }">
-        <v-btn
-          color="primary"
-          v-bind="props"
-        >
-          保存
-        </v-btn>
-      </template>
-      <v-card>
-        <v-card-title class="text-h5">
-          保存しますか？
-        </v-card-title>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="green-darken-1"
-            variant="text"
-            @click="dialog = false"
-          >
-            いいえ
+      <v-dialog v-model="dialog" persistent width="auto">
+        <template v-slot:activator="{ props }">
+          <v-btn color="primary" v-bind="props">
+            保存
           </v-btn>
-          <v-btn
-            color="green-darken-1"
-            variant="text"
-            @click="save(); dialog = false"
-          >
-            はい
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+        </template>
+        <v-card>
+          <v-card-title class="text-h5">
+            保存しますか？
+          </v-card-title>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green-darken-1" variant="text" @click="dialog = false">
+              いいえ
+            </v-btn>
+            <v-btn color="green-darken-1" variant="text" @click="save(); dialog = false">
+              はい
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-container>
 
   </v-content>
@@ -214,7 +201,7 @@ export default {
       const { valid } = await this.$refs.form.validate()
       if (valid) {
         this.confirmMode = true
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
       } else {
 
       }
@@ -222,23 +209,40 @@ export default {
 
     save() {
 
-      let { empId, ...updateData } = this.employeeData;
+      let { empId, ...updateData } = this.employeeData
 
       updateData.department = DepartmentService.idToResourse(updateData.department.deptCode)
-      updateData.jobTitle =  JobTitleService.idToResourse(updateData.jobTitle.code)
+      updateData.jobTitle = JobTitleService.idToResourse(updateData.jobTitle.code)
 
       EmployeeService.patchEmployeeById(this.$route.params.id, updateData).then(res => {
-        this.updated = true
-        this.confirmMode = false
-        window.scrollTo(0,0);
-        this.$router.push('/employee/'+ this.employeeData.empId)
+
+
+
+        if (this.$store.state.user.userDetail.empId != empId && this.employeeData.department.deptCode == 'k01' && this.employeeData.jobTitle.code == 'k') {
+
+          EmployeeService.patchEmployeeById(this.$store.state.user.userDetail.empId, { jobTitle: JobTitleService.idToResourse('s') }).then(res => {
+
+            this.updated = true
+            this.confirmMode = false
+            window.scrollTo(0, 0);
+            this.$router.push('/employee/' + this.employeeData.empId).then(() => { this.$router.go() })
+
+          })
+
+        } else {
+          this.updated = true
+          this.confirmMode = false
+          window.scrollTo(0, 0);
+          this.$router.push('/employee/' + this.employeeData.empId)
+        }
+
       }).catch(error => console.log(error))
     }
   },
   mounted() {
 
-    if (this.$store.state.user.userDetail.department.deptCode !='k01' ) {
-        this.$router.push("/403")
+    if (this.$store.state.user.userDetail.department.deptCode != 'k01') {
+      this.$router.push("/403")
     }
 
     EmployeeService.getEmployeeById(this.$route.params.id).then(res => {
@@ -251,7 +255,7 @@ export default {
 
 
     DepartmentService.getDepartments().then(res => {
-      this.departments = res.data._embedded.department.filter(x=>x.deptCode== this.$store.state.user.userDetail.department.deptCode || this.$store.state.user.userDetail.department.deptCode =='k01')
+      this.departments = res.data._embedded.department.filter(x => x.deptCode == this.$store.state.user.userDetail.department.deptCode || this.$store.state.user.userDetail.department.deptCode == 'k01')
     }).catch(error => console.log(error))
 
 
