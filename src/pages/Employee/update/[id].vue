@@ -46,7 +46,7 @@
               <v-row>
                 <v-col class="d-flex" cols="6" sm="4">
                   <v-select v-model="employeeData.jobTitle.code" :items="titles"
-                    :disabled="($store.state.user.userDetail.jobTitle.code == 'k' && employeeData.empId == $store.state.user.userDetail.empId) || (employeeData.department.deptCode == 'k01' && employeeData.jobTitle.code == 'k' && $store.state.user.userDetail.jobTitle.code == 's')"
+                    :disabled="($store.state.user.userDetail.jobTitle.code == 'k' && employeeData.empId == $store.state.user.userDetail.empId) || (employeeData.department.deptCode == 'k01' && $store.state.user.userDetail.jobTitle.code == 's')"
                     label="役職" :rules="[v => !!v || '必要項目']" item-value="code" item-title="name"></v-select>
                 </v-col>
 
