@@ -61,7 +61,7 @@
     <v-btn v-if="$store.state.user.userDetail.department.deptCode == 'k01'" class="mx-2" color="primary" elevation="2" large @click="gotoUpdate()">情報更新</v-btn>
     <v-dialog v-if="employeeData && $store.state.user.userDetail.department.deptCode == 'k01'" v-model="dialog" persistent>
         <template v-slot:activator="{ props }">
-            <v-btn color="pink" :disabled="employeeData.empId == $store.state.user.userDetail.empId || employeeData.jobTitle.code=='k'" v-bind="props">
+            <v-btn color="pink" :disabled="employeeData.empId == $store.state.user.userDetail.empId || (employeeData.jobTitle.code=='k' && employeeData.department.deptCode=='k01')" v-bind="props">
                 アカウント削除
             </v-btn>
         </template>

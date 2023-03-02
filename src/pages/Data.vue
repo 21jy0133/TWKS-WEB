@@ -25,7 +25,7 @@
 
   <v-navigation-drawer floating permanent>
     <v-list dense rounded>
-      <v-list-item :active="item.deptCode == this.selectDepartment" v-for=" item in departments"
+      <v-list-item :class="{ solid_border: item.deptCode == selectedDepartment }" :active="item.deptCode == this.selectDepartment" v-for=" item in departments"
         @click="selectDepartment(item.deptCode)" :key="item.id" link>
         <v-list-item-content>
           <v-list-item-title>{{ item.deptName }}</v-list-item-title>
@@ -127,6 +127,7 @@ export default {
       this.$router.push('/employee/add')
     },
     searchEmployee() {
+      this.selectedDepartment = null
       this.$refs.form.validate().then((v) => {
         if (v.valid)
           this.$router.replace({ query: { searchId: this.searchId, searchName: this.searchName, pickedDate: this.pickedDate.getTime() } })
@@ -230,6 +231,10 @@ export default {
 
 .read-the-docs {
   color: #888;
+}
+
+.solid_border {
+    border: solid;
 }
 
 button {
